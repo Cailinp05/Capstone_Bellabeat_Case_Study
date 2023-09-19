@@ -158,7 +158,6 @@ ggplot(total_distance) + geom_line(aes(x=Ymd, y=Mean)) +
   scale_y_continuous(labels= comma)
 
 # Okay so what all can I focus on and plot to answer the questions?
-
 # How are people using smart products? ------------------------------------
 # Some plots I could make:
 # Plot sleep vs active vs steps
@@ -222,7 +221,6 @@ ggplot(sleep, aes(x = Date, y = TotalMinutesAsleep, fill = factor(Month))) +
        y = "Sleep Duration (minutes)") +
   scale_fill_discrete(name = "Month")
 
-
 # Example: Line plot of heart rate over time
 
 # Split the character column into separate date columns
@@ -242,7 +240,6 @@ ggplot(weight, aes(x = Date, y = WeightKg)) +
   labs(title = "Weight Changes Over Time",
        x = "Date",
        y = "Weight (kg)")
-
 
 # Daily steps vs minutes sleep --------------------------------------------
 

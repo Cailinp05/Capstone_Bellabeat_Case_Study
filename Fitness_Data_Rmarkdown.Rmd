@@ -35,6 +35,7 @@ library(gridExtra)
 ```
 
 Step 2: Load the datasets.
+
 ```{r}
 daily_activity <- read.csv("fitness/dailyActivity_merged.csv")
 daily_calories <- read.csv("fitness/dailyCalories_merged.csv")
@@ -84,6 +85,7 @@ summary(minute_met_narrow)
 ```
 
 Step 4: Head of datasets
+
 ```{r}
 head(daily_activity)
 head(daily_calories)
@@ -110,6 +112,7 @@ head(minute_met_narrow)
 ```
 
 Step 5: Strings of all datasets
+
 ```{r}
 str(daily_activity)
 str(daily_calories)
@@ -151,6 +154,7 @@ daily_activity %>% count(Ymd, sort = TRUE) %>%
 ```
 
 Step 7: total_steps and view
+
 ```{r}
 total_steps <- daily_activity %>% group_by(Ymd) %>% 
   summarise( Steps = sum(TotalSteps,na.rm=TRUE), 
@@ -167,6 +171,7 @@ ggplot(total_steps) + geom_line(aes(x=Ymd, y=Mean)) +
 ```
 
 Step 8: total_distance and view
+
 ```{r}
 total_distance <- daily_activity %>% group_by(Ymd) %>% 
     summarise( Distance = sum(TotalDistance,na.rm=TRUE), 
@@ -184,8 +189,8 @@ ggplot(total_distance) + geom_line(aes(x=Ymd, y=Mean)) +
 ```
 
 Step 9: Merge daily_steps and daily_calories datasets
-```{r}
 
+```{r}
    merged_steps_calories <- merge(daily_steps, daily_calories, by = "Ymd")
    
 # Create a line plot for average daily steps and calories
@@ -217,6 +222,7 @@ Step 10: Example of Sleep duration over time
 ```
 
 Example: Line plot of heart rate over time 
+
 ```{r}
 # Example: Line plot of heart rate over time
    
@@ -231,6 +237,7 @@ Example: Line plot of heart rate over time
 ```
 
 Example: Line plot of weight changes over time
+
 ```{r}
 # Example: Line plot of weight changes over time
    weight$Date <- as.Date(weight$Date, format = "%m/%d/%Y")
@@ -244,6 +251,7 @@ Example: Line plot of weight changes over time
 ```
 
 Daily steps vs minutes sleep
+
 ```{r}
 sleep_tidy <- sleep %>% 
      mutate(Date = as.Date(sleep$SleepDay, format = "%m/%d/%Y"))
@@ -275,6 +283,7 @@ ggplot(merged_steps_sleep, aes(x = TotalMinutesAsleep, y = StepTotal, color = Mo
 ```
 
 Line plot of TotalMinutesAsleep and StepTotal over time
+
 ```{r}
 # Line plot of TotalMinutesAsleep and StepTotal over time
 ggplot(merged_steps_sleep, aes(x = Date)) +
@@ -288,6 +297,7 @@ ggplot(merged_steps_sleep, aes(x = Date)) +
 ```
 
 Hourly steps per day average
+
 ```{r}
 str(daily_steps)
 
@@ -305,6 +315,7 @@ print(daily_steps)
 ```
 
 Hourly steps vs hourly calories
+
 ```{r}
 str(hourly_calories)
 
@@ -342,6 +353,7 @@ ggplot(hourly_steps_calories, aes(x = StepTotal, y = Calories, color = Day)) +
 ```
 
 Correlations daily steps vs daily sleep
+
 ```{r}
 str(daily_steps)
 
