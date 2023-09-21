@@ -149,6 +149,8 @@ ggplot(merged_steps_sleep, aes(x = TotalMinutesAsleep, y = StepTotal, color = Da
        y = "Total Steps") +
   scale_color_viridis_c()
 ```
+![Sleep Duration vs. Steps](fitness/Sleep Duration vs. Steps.png)
+
 
 For some of the datasets I analyzed I added a new column based on the date in order to plot the days of the week on the x-axis. I used ggplot() to visualize the data and used custom colors chosen from http://tristen.ca/hcl-picker/#/hcl/1/0.92/000000/000000
 
