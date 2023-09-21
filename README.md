@@ -54,14 +54,1232 @@ Sorting, filtering, cleaning, and merging were required in order to observe and 
 
 This data has a sample size of 30 users with no demographic information, therefore, a sampling bias was encountered. It is uncertain whether the sample size was representative of the whole population. The dataset is also limited to a survey of only 2 months long. 
 
+The data is from 2016 and only includes April and May months. The data could be sample selection bias and not reflect the overall population. 
+
 # 4. Process 
 :hammer_and_wrench: 4.
 
-# 5. Analyze 
-:bar_chart: 5. 
+I used R studio for verifying, cleaning, transformation, analysis and visualization. 
 
-# 6. Share
-:mailbox_with_mail: 6. 
+Importing libraries:
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(scales)
+library(here)
+library(skimr)
+library(janitor)
+library(ggpubr)
+library(ggrepel)
+library(shiny)
+library(plotly)
+library(psych)
+library(corrplot)
+library(gganimate)
+library(gifski)
+library(av)
+library(transformr)
+library(reshape2)
+library(plotly)
+library(gridExtra)
+```
+
+Importing datasets example:
+
+```{r}
+daily_activity <- read.csv("fitness/dailyActivity_merged.csv")
+daily_calories <- read.csv("fitness/dailyCalories_merged.csv")
+daily_intensities <- read.csv("fitness/dailyIntensities_merged.csv")
+daily_steps <- read.csv("fitness/dailySteps_merged.csv")
+heartrate <- read.csv("fitness/heartrate_seconds_merged.csv")
+hourly_calories <- read.csv("fitness/hourlyCalories_merged.csv")
+hourly_intensities <- read.csv("fitness/hourlyIntensities_merged.csv")
+hourly_steps <- read.csv("fitness/hourlySteps_merged.csv")
+minute_calories_narrow <- read.csv("fitness/minuteCaloriesNarrow_merged.csv")
+minute_calories_wide <- read.csv("fitness/minuteCaloriesWide_merged.csv")
+minute_intensities_narrow <- read.csv("fitness/minuteIntensitiesNarrow_merged.csv")
+minute_intensities_wide <- read.csv("fitness/minuteIntensitiesWide_merged.csv")
+minute_steps_narrow <- read.csv("fitness/minuteStepsNarrow_merged.csv")
+minute_steps_wide <- read.csv("fitness/minuteStepsWide_merged.csv")
+minute_sleep <- read.csv("fitness/minuteSleep_merged.csv")
+sleep <- read.csv("fitness/sleepDay_merged.csv")
+weight <- read.csv("fitness/weightLogInfo_merged.csv")
+minute_met_narrow <- read.csv("fitness/minuteMETsNarrow_merged.csv")
+```
+First I examined the data by checking for NA's, remove duplicates for the datasets. Here is one example:
+
+```{r}
+sum(duplicated(sleep))
+sleep <- sleep %>%
+  distinct() %>%
+  drop_na()
+sum(duplicated(sleep))
+```
+There are a few date format changes I had to do. Here is one example:
+
+```{r}
+sleep_tidy <- sleep %>% 
+     mutate(Date = as.Date(sleep$SleepDay, format = "%m/%d/%Y"))
+   
+   steps_tidy <- daily_steps %>% 
+     mutate(Date = as.Date(daily_steps$ActivityDay, format = "%m/%d/%Y"))
+```
+
+Some datasets were merged. Here is one of them:
+
+```{r}
+merged_steps_sleep <- merge(sleep_tidy, steps_tidy, by = "Date")
+```
+ 
+
+# 5 and 6. Analyze and Share
+:mailbox_with_mail: and :bar_chart:
+
+```{r}
+ggplot(merged_steps_sleep, aes(x = TotalMinutesAsleep, y = StepTotal, color = Date)) +
+  geom_point() +
+  labs(title = "Sleep Duration vs. Steps",
+       x = "Total Minutes Asleep",
+       y = "Total Steps") +
+  scale_color_viridis_c()
+```
+
+For some of the datasets I analyzed I added a new column based on the date in order to plot the days of the week on the x-axis. I used ggplot() to visualize the data and used custom colors chosen from http://tristen.ca/hcl-picker/#/hcl/1/0.92/000000/000000
+
+Here is an example:
+
+```{r}
+# Define a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Order the weekdays in the desired order (Monday to Sunday)
+daily_steps_aggregated$Weekday <- factor(daily_steps_aggregated$Weekday,
+                                         levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+# Create the plot with custom colors
+ggplot(daily_steps_aggregated, aes(x = Weekday, y = TotalSteps, fill = Weekday)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +  # Use custom colors
+  labs(x = "Days of the week", y = "Total Steps", title = "Total Steps Taken Per Weekday with Custom Colors") +
+  theme_minimal()
+```
+
+Average Steps Analysis:
+```{r}
+ggplot(total_steps) + geom_line(aes(x=Ymd, y=Mean)) +
+    labs(title="Average Steps By Day") + 
+    scale_y_continuous(labels= comma)
+```
+
+From this we can see that majority of people are not walking the average daily steps of 10000. 
+
+Average Distance Analysis:
+```{r}
+ggplot(total_distance) + geom_line(aes(x=Ymd, y=Mean)) +
+     labs(title="Average Distance By Date", y= "Total Distance") + 
+     scale_y_continuous(labels= comma)
+```
+This is very similar to average steps with the same dip in the graph towards the end. 
+
+I then merged the two datasets as below:
+
+```{r}
+   merged_steps_calories <- merge(daily_steps, daily_calories, by = "Ymd")
+   
+# Create a line plot for average daily steps and calories
+   ggplot(merged_steps_calories, aes(x = Ymd)) +
+     geom_line(aes(y = StepTotal, color = "Total Steps")) +
+     geom_line(aes(y = Calories, color = "Calories"), linetype = "dashed") +
+     labs(title = "Average Daily Steps and Calories",
+          x = "Date",
+          y = "Count") +
+     scale_color_manual(values = c("Total Steps" = "blue", "Calories" = "red"))
+```
+ As expected, the more steps people take, the more calories they burn.
+ 
+Sleep vs Activity Analysis:
+
+```{r}
+str(daily_sleep)
+str(daily_activity)
+
+# Convert ActivityDate to a Date object
+daily_activity$ActivityDate <- as.Date(daily_activity$ActivityDate, format = "%m/%d/%Y")
+
+# Create separate columns for Day, Month, Year, Hour, and Date
+daily_activity <- daily_activity %>%
+  mutate(Day = day(ActivityDate),
+         Month = month(ActivityDate),
+         Year = year(ActivityDate),
+         Hour = hour(ActivityDate),
+         Date = date(ActivityDate))
+
+# Merge the two datasets based on common dates
+daily_activity_sleep <- merge(daily_activity, daily_sleep, by = "Date")
+
+# Time series plot of activity variables and sleep over time
+ggplot(daily_activity_sleep, aes(x = ActivityDate)) +
+  geom_line(aes(y = TotalSteps, color = "Total Steps")) +
+  geom_line(aes(y = VeryActiveMinutes, color = "Very Active Minutes")) +
+  geom_line(aes(y = TotalMinutesAsleep, color = "Total Minutes Asleep")) +
+  labs(title = "Trends in Daily Activity and Sleep",
+       x = "Date",
+       y = "Value") +
+  scale_color_manual(values = c("Total Steps" = "blue", "Very Active Minutes" = "green", "Total Minutes Asleep" = "purple")) +
+  theme_minimal()
+
+# Stacked area plot of activity levels over time
+ggplot(daily_activity, aes(x = Date, y = LightlyActiveMinutes, fill = SedentaryMinutes)) +
+  geom_area(alpha = 0.7) +
+  labs(title = "Composition of Activity Levels Over Time",
+       x = "Date",
+       y = "Minutes") +
+  scale_fill_gradient(low = "red", high = "blue") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# Scatter plot with bubble size and color representing activity and sleep
+ggplot(daily_activity_sleep, aes(x = TotalSteps, y = VeryActiveMinutes, size = TotalSteps, color = TotalMinutesAsleep)) +
+  geom_point(alpha = 0.7) +
+  labs(title = "Relationship Between Steps, Activity, and Sleep",
+       x = "Total Steps",
+       y = "Very Active Minutes") +
+  scale_color_viridis_c() +
+  scale_size_continuous(range = c(3, 10)) +
+  theme_minimal()
+```
+
+From this we can see that people do not sleep enough hours and are not as active as they should be. Specifically, majority of people are lightly active, but more people are sedentary.  
+
+Heartrate dataset:
+
+```{r}
+heartrate <- read.csv("fitness/heartrate_seconds_merged.csv")
+str(heartrate)
+
+# Extract Hour and Minutes using lubridate
+heartrate$Hour <- hour(mdy_hms(heartrate$Time))
+heartrate$Minutes <- minute(mdy_hms(heartrate$Time))
+# Extract Month, Year, and Date using lubridate
+heartrate$Month <- month(mdy_hms(heartrate$Time))
+heartrate$Year <- year(mdy_hms(heartrate$Time))
+heartrate$Day <- date(mdy_hms(heartrate$Time))
+
+# Convert the "Day" column to a Date object
+heartrate$Day <- as.Date(heartrate$Day)
+
+# Create a new column "dayoftheweek" with the day of the week
+heartrate$dayoftheweek <- weekdays(heartrate$Day)
+
+# If you want to convert the day names to Monday-Sunday format, you can use this:
+heartrate$dayoftheweek <- factor(heartrate$dayoftheweek, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+heart_rate <- heartrate %>%
+  group_by(Day, Month, Year) %>%
+  summarise(mean_heart_rate = mean(Value, na.rm = TRUE))
+
+heart_rate
+
+#heartrate$MonthYear <- floor_date(heartrate$Day, unit = "month") 
+#heartrate$MonthYear <- format(heartrate$Day, "%Y-%m")
+
+heart_rate$Month <- factor(heart_rate$Month, levels = c(4, 5), labels = c("April", "May"))
+
+# Create the plot
+#ggplot(heart_rate, aes(x = MonthYear, y = mean_heart_rate, color = Month)) +
+#  geom_line() +
+#  labs(x = "Month/Year", y = "Heart Rate", title = "Daily Mean Heart Rate") +
+ # scale_color_manual(values = c("4" = "pink", "5" = "blue"))
+# Extract the month and year from the 'Day' column
+# heartrate$MonthYear <- format(heartrate$Day, "%Y-%m")
+#heartrate <- heartrate %>%
+#  mutate(MonthYear = format(Day, "%Y-%m"))
+
+# Create the plot
+p1 <- ggplot(heart_rate, aes(x = Day, y = mean_heart_rate, color = Month)) +
+  geom_line() +
+  labs(x = "Month/Year", y = "heart_rate", title = "Daily Mean Heartrate") +
+  scale_color_manual(values = c("April" = "red", "May" = "blue"))
+
+p1
+```
+This shows the heartrate for both months. Due to heartrate dataset, I wanted to animate it for fun as such:
+
+```{r}
+library(gganimate)
+library(gifski)
+library(av)
+library(transformr)
+#animating the above plot
+plot1 <- p1+transition_reveal(as.numeric(Day))
+
+animate(plot1)
+```
+Daily Steps Analysis for days of the week with custom colors:
+
+```{r}
+daily_steps <- read.csv("fitness/dailySteps_merged.csv")
+
+str(daily_steps)
+
+# Extract Month, Year, and Date using lubridate
+# Assuming daily_steps is your data frame
+daily_steps$ActivityDay <- as.Date(daily_steps$ActivityDay, format = "%m/%d/%Y")
+
+# Extracting Month, Year, and Date
+daily_steps$Month <- format(daily_steps$ActivityDay, "%m")
+daily_steps$Year <- format(daily_steps$ActivityDay, "%Y")
+daily_steps$Date <- format(daily_steps$ActivityDay, "%d")
+
+# Display the updated data frame
+head(daily_steps)
+
+# Assuming daily_steps is your data frame
+daily_steps$dayoftheweek <- weekdays(daily_steps$ActivityDay)
+
+# Convert day names to Monday-Sunday format
+daily_steps$dayoftheweek <- factor(daily_steps$dayoftheweek, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+# Convert ActivityDay to Date if not already done
+daily_steps$ActivityDay <- as.Date(daily_steps$ActivityDay, format = "%m/%d/%Y")
+
+# Create a new data frame to aggregate steps by day and year
+daily_steps_aggregated <- daily_steps %>%
+  group_by(Year, ActivityDay) %>%
+  summarise(TotalSteps = sum(StepTotal))
+
+# Create the plot
+ggplot(daily_steps_aggregated, aes(x = ActivityDay, y = TotalSteps, group = Year, color = Year)) +
+  geom_line() +
+  labs(x = "Date", y = "Total Steps", title = "Total Steps Taken Per Day by Year") +
+  scale_x_date(date_labels = "%b %d, %Y", date_breaks = "1 month") +
+  theme_minimal()
+
+# Convert ActivityDay to Date if not already done
+daily_steps$ActivityDay <- as.Date(daily_steps$ActivityDay, format = "%m/%d/%Y")
+
+# Create a new data frame to aggregate steps by day and month
+daily_steps_aggregated <- daily_steps %>%
+  group_by(Year, Month, ActivityDay) %>%
+  summarise(TotalSteps = sum(StepTotal))
+
+# Create the plot
+ggplot(daily_steps_aggregated, aes(x = ActivityDay, y = TotalSteps, group = Month, color = Month)) +
+  geom_line() +
+  labs(x = "Date", y = "Total Steps", title = "Total Steps Taken Per Day by Month") +
+  scale_x_date(date_labels = "%b %Y", date_breaks = "1 month") +
+  theme_minimal()
+
+# Create a new data frame to aggregate steps by weekday
+daily_steps_aggregated <- daily_steps %>%
+  mutate(Weekday = weekdays(ActivityDay)) %>%
+  group_by(Weekday) %>%
+  summarise(TotalSteps = sum(StepTotal))
+
+# Define a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Order the weekdays in the desired order (Monday to Sunday)
+daily_steps_aggregated$Weekday <- factor(daily_steps_aggregated$Weekday,
+                                         levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+# Create the plot with custom colors
+ggplot(daily_steps_aggregated, aes(x = Weekday, y = TotalSteps, fill = Weekday)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +  # Use custom colors
+  labs(x = "Days of the week", y = "Total Steps", title = "Total Steps Taken Per Weekday with Custom Colors") +
+  theme_minimal()
+```
+
+Here we can see that there is a spike on a Tuesday and most people rest on Sundays. We can see the same for calories:
+
+```{r}
+daily_calories <- read.csv("fitness/dailyCalories_merged.csv")
+
+str(daily_calories)
+
+# Extract Month, Year, and Date using lubridate
+daily_calories$ActivityDay <- as.Date(daily_calories$ActivityDay, format = "%m/%d/%Y")
+
+# Extracting Month, Year, and Date
+daily_calories$Month <- format(daily_calories$ActivityDay, "%m")
+daily_calories$Year <- format(daily_calories$ActivityDay, "%Y")
+daily_calories$Date <- format(daily_calories$ActivityDay, "%d")
+
+# Display the updated data frame
+head(daily_calories)
+
+daily_calories$dayoftheweek <- weekdays(daily_calories$ActivityDay)
+
+# Convert day names to Monday-Sunday format
+daily_calories$dayoftheweek <- factor(daily_calories$dayoftheweek, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+# Convert ActivityDay to Date if not already done
+daily_calories$ActivityDay <- as.Date(daily_calories$ActivityDay, format = "%m/%d/%Y")
+
+daily_calories_total <- daily_calories %>%
+  group_by(ActivityDay) %>%
+  summarize(TotalCalories = sum(Calories))
+
+ggplot(daily_calories_total, aes(x = ActivityDay, y = TotalCalories)) +
+  geom_line() +
+  labs(title = "Total Calories Burned Daily",
+       x = "Date",
+       y = "Total Calories") +
+  theme_minimal()
+
+daily_calories_total_month <- daily_calories %>%
+  mutate(ActivityDay = as.Date(ActivityDay)) %>%
+  group_by(Year, Month, ActivityDay) %>%
+  summarize(TotalCalories = sum(Calories))
+
+# Aggregate by month to get the total calories burned per month
+monthly_total_calories <- daily_calories_total_month %>%
+  group_by(Year, Month) %>%
+  summarize(TotalCalories = sum(TotalCalories))
+
+ggplot(monthly_total_calories, aes(x = Month, y = TotalCalories, fill = Year)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Total Calories Burned Per Month",
+       x = "Month",
+       y = "Total Calories",
+       fill = "Year") +
+  theme_minimal()
+
+daily_calories_total_weekday <- daily_calories %>%
+  mutate(ActivityDay = as.Date(ActivityDay),
+         weekday = weekdays(ActivityDay)) %>%
+  group_by(weekday) %>%
+  summarize(TotalCalories = sum(Calories))
+
+# Ensure that the weekdays are in the desired order
+daily_calories_total_weekday$weekday <- factor(
+  daily_calories_total_weekday$weekday,
+  levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+)
+
+# Create the bar plot with custom colors
+ggplot(daily_calories_total_weekday, aes(x = weekday, y = TotalCalories, fill = weekday)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Total Calories Burned Per Weekday",
+       x = "Days of the week",
+       y = "Total Calories") +
+  scale_fill_manual(values = custom_colors) +  # Set custom colors
+  theme_minimal()
+
+# Create a heatmap of total calories burned per month and year
+heatmap_plot <- ggplot(monthly_total_calories, aes(x = Month, y = Year, fill = TotalCalories)) +
+  geom_tile() +
+  labs(title = "Total Calories Burned Per Month and Year",
+       x = "Month",
+       y = "Year",
+       fill = "Total Calories") +
+  scale_fill_gradient(low = "blue", high = "red") +  # Choose color scale
+  theme_minimal()
+
+# Display the heatmap
+print(heatmap_plot)
+```
+Daily Intensity Dataset:
+
+```{r}
+daily_intensities <- read.csv("fitness/dailyIntensities_merged.csv")
+
+str(daily_intensities)
+
+# Convert ActivityDay to Date
+daily_intensities$ActivityDay <- as.Date(daily_intensities$ActivityDay, format = "%m/%d/%Y")
+
+# Extract year, month, and weekday
+daily_intensities$Year <- year(daily_intensities$ActivityDay)
+daily_intensities$Month <- month(daily_intensities$ActivityDay, label = TRUE)
+daily_intensities$Weekday <- weekdays(daily_intensities$ActivityDay)
+
+# Create a custom color palette
+custom_colors <- c("#E89594", "#D69AB8", "#A3A9D2", "#57B8CD", "#26C0A5", "#65BE68", "#ACB230", "#EE982D")
+  
+# Create a data frame with the total minutes for each activity level
+activity_totals <- data.frame(
+  Activity = c("Sedentary", "Lightly Active", "Fairly Active", "Very Active"),
+  TotalMinutes = c(
+    sum(daily_intensities$SedentaryMinutes),
+    sum(daily_intensities$LightlyActiveMinutes),
+    sum(daily_intensities$FairlyActiveMinutes),
+    sum(daily_intensities$VeryActiveMinutes)
+  )
+)
+
+# Calculate the percentages
+activity_totals$Percentage <- (activity_totals$TotalMinutes / sum(activity_totals$TotalMinutes)) * 100
+
+# Create a pie chart with labels
+ggplot(activity_totals, aes(x = "", y = TotalMinutes, fill = Activity)) +
+  geom_bar(stat = "identity") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(values = custom_colors) +
+  labs(title = "Distribution of Activity Levels") +
+  theme_void() +
+  theme(legend.position = "bottom") +
+  geom_text(aes(label = paste0(Activity, "\n", round(Percentage, 1), "%")),
+            position = position_stack(vjust = 0.5)) +
+  theme(axis.text = element_blank()) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Create a pie chart with percentages and a legend
+ggplot(activity_totals, aes(x = "", y = TotalMinutes, fill = Activity)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  scale_fill_manual(values = custom_colors) +
+  labs(title = "Distribution of Activity Levels") +
+  theme_void() +
+  theme(legend.position = "bottom") +
+  geom_text(aes(label = paste0(round(Percentage, 1), "%")),
+            position = position_stack(vjust = 0.5)) +
+  guides(fill = guide_legend(title = "Activity")) +
+  theme(axis.text = element_blank()) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Create a pie chart with percentages and a legend
+ggplot(activity_totals, aes(x = "", y = TotalMinutes, fill = Activity)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  scale_fill_manual(values = custom_colors) +
+  labs(title = "Distribution of Activity Levels") +
+  theme_void() +
+  theme(legend.position = "bottom") +
+  geom_text(aes(label = ifelse(Activity %in% c("Fairly Active", "Very Active"), "", paste0(round(Percentage, 1), "%"))),
+            position = position_stack(vjust = 0.5)) +
+  guides(fill = guide_legend(title = "Activity")) +
+  theme(axis.text = element_blank()) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+activity_weekday <- daily_intensities %>%
+  group_by(Weekday) %>%
+  summarise(
+    Sedentary = sum(SedentaryMinutes),
+    LightlyActive = sum(LightlyActiveMinutes),
+    FairlyActive = sum(FairlyActiveMinutes),
+    VeryActive = sum(VeryActiveMinutes)
+  ) %>%
+  gather(Activity, Minutes, -Weekday)
+
+# Define custom colors for the activity levels
+custom_colors <- c(
+  "Sedentary" = "#F09099",
+  "LightlyActive" = "#81B0D8",
+  "FairlyActive" = "#55BF7A",
+  "VeryActive" = "#ED9837"
+)
+
+# Create the bar plot
+ggplot(activity_weekday, aes(x = Weekday, y = Minutes, fill = Activity)) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_fill_manual(values = custom_colors) +
+  labs(title = "Total Activities per Weekday",
+       x = "Weekday",
+       y = "Total Minutes") +
+  theme_minimal() +
+  theme(legend.title = element_blank())
+
+activity_month <- daily_intensities %>%
+  group_by(Month) %>%
+  summarise(
+    Sedentary = sum(SedentaryMinutes),
+    LightlyActive = sum(LightlyActiveMinutes),
+    FairlyActive = sum(FairlyActiveMinutes),
+    VeryActive = sum(VeryActiveMinutes)
+  ) %>%
+  gather(Activity, Minutes, -Month)
+
+custom_colors <- c(
+  "Sedentary" = "#F09099",
+  "LightlyActive" = "#81B0D8",
+  "FairlyActive" = "#55BF7A",
+  "VeryActive" = "#ED9837"
+)
+
+# Create the stacked bar plot
+ggplot(activity_month, aes(x = Month, y = Minutes, fill = Activity)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(title = "Total Activities per Month",
+       x = "Month",
+       y = "Total Minutes") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(legend.title = element_blank())
+
+activity_year <- daily_intensities %>%
+  group_by(Year) %>%
+  summarise(
+    Sedentary = sum(SedentaryMinutes),
+    LightlyActive = sum(LightlyActiveMinutes),
+    FairlyActive = sum(FairlyActiveMinutes),
+    VeryActive = sum(VeryActiveMinutes)
+  ) %>%
+  gather(Activity, Minutes, -Year)
+
+# Define custom colors for the activity levels
+custom_colors <- c(
+  "Sedentary" = "#F09099",
+  "LightlyActive" = "#81B0D8",
+  "FairlyActive" = "#55BF7A",
+  "VeryActive" = "#ED9837"
+)
+
+# Create the stacked bar plot
+ggplot(activity_year, aes(x = Year, y = Minutes, fill = Activity)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(title = "Total Activities for the Year",
+       x = "Year",
+       y = "Total Minutes") +
+  theme_minimal() +
+  theme(legend.title = element_blank())
+
+# Create a histogram to visualize the distribution of activity minutes
+ggplot(daily_intensities, aes(x = SedentaryMinutes)) +
+  geom_histogram(binwidth = 30, fill = "#F09099", color = "black") +
+  labs(title = "Distribution of Sedentary Minutes",
+       x = "Sedentary Minutes",
+       y = "Frequency") +
+  theme_minimal()
+
+# Create histograms for other activity levels (LightlyActive, FairlyActive, VeryActive)
+ggplot(daily_intensities, aes(x = LightlyActiveMinutes)) +
+  geom_histogram(binwidth = 30, fill = "#81B0D8", color = "black") +
+  labs(title = "Distribution of Lightly Active Minutes",
+       x = "Lightly Active Minutes",
+       y = "Frequency") +
+  theme_minimal()
+
+ggplot(daily_intensities, aes(x = FairlyActiveMinutes)) +
+  geom_histogram(binwidth = 30, fill = "#55BF7A", color = "black") +
+  labs(title = "Distribution of Fairly Active Minutes",
+       x = "Fairly Active Minutes",
+       y = "Frequency") +
+  theme_minimal()
+
+ggplot(daily_intensities, aes(x = VeryActiveMinutes)) +
+  geom_histogram(binwidth = 30, fill = "#ED9837", color = "black") +
+  labs(title = "Distribution of Very Active Minutes",
+       x = "Very Active Minutes",
+       y = "Frequency") +
+  theme_minimal()
+
+# Reshape the data from wide to long format using the tidyr package
+library(tidyr)
+daily_intensities_long <- daily_intensities %>%
+  pivot_longer(cols = c(SedentaryMinutes, LightlyActiveMinutes, FairlyActiveMinutes, VeryActiveMinutes),
+               names_to = "Activity",
+               values_to = "Minutes")
+
+# Create a time series plot for the four activity measures
+ggplot(daily_intensities_long, aes(x = ActivityDay, y = Minutes, color = Activity)) +
+  geom_line() +
+  labs(title = "Time Series of Activity Minutes",
+       x = "Date",
+       y = "Minutes") +
+  scale_color_manual(values = c("#F09099", "#81B0D8", "#55BF7A", "#ED9837")) +
+  theme_minimal()
+
+# Reshape the data from wide to long format using the tidyr package
+library(tidyr)
+daily_intensities_long <- daily_intensities %>%
+  pivot_longer(cols = c(SedentaryMinutes, LightlyActiveMinutes, FairlyActiveMinutes, VeryActiveMinutes),
+               names_to = "Activity",
+               values_to = "Minutes")
+
+# Create a box plot for activity minutes by Weekday
+ggplot(daily_intensities_long, aes(x = Weekday, y = Minutes, fill = Activity)) +
+  geom_boxplot() +
+  labs(title = "Distribution of Activity Minutes by Weekday",
+       x = "Weekday",
+       y = "Minutes") +
+  scale_fill_manual(values = c("#F09099", "#81B0D8", "#55BF7A", "#ED9837")) +  # Custom colors
+  theme_minimal()
+
+# Create scatter plots for pairs of activity measures
+scatter_plot_sedentary_lightly <- ggplot(daily_intensities, aes(x = SedentaryMinutes, y = LightlyActiveMinutes)) +
+  geom_point(color = "#F09099") +
+  labs(title = "Scatter Plot: Sedentary vs. Lightly Active Minutes",
+       x = "Sedentary Minutes",
+       y = "Lightly Active Minutes") +
+  theme_minimal()
+
+scatter_plot_fairly_very <- ggplot(daily_intensities, aes(x = FairlyActiveMinutes, y = VeryActiveMinutes)) +
+  geom_point(color = "#55BF7A") +
+  labs(title = "Scatter Plot: Fairly Active vs. Very Active Minutes",
+       x = "Fairly Active Minutes",
+       y = "Very Active Minutes") +
+  theme_minimal()
+
+library(gridExtra)
+grid.arrange(scatter_plot_sedentary_lightly, scatter_plot_fairly_very, ncol = 2)
+
+# Reshape the data from wide to long format using the tidyr package
+library(tidyr)
+daily_intensities_long <- daily_intensities %>%
+  pivot_longer(cols = c(SedentaryMinutes, LightlyActiveMinutes, FairlyActiveMinutes, VeryActiveMinutes),
+               names_to = "Activity",
+               values_to = "Minutes")
+
+# Create a density plot for activity distribution throughout the day
+ggplot(daily_intensities_long, aes(x = Minutes, fill = Activity)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Density Plot of Activity Distribution Throughout the Day",
+       x = "Minutes",
+       y = "Density") +
+  scale_fill_manual(values = c("#F09099", "#81B0D8", "#55BF7A", "#ED9837")) +  # Custom colors
+  theme_minimal()
+
+# Reshape the data from wide to long format using the tidyr package
+library(tidyr)
+daily_intensities_long <- daily_intensities %>%
+  pivot_longer(cols = c(SedentaryMinutes, LightlyActiveMinutes, FairlyActiveMinutes, VeryActiveMinutes),
+               names_to = "Activity",
+               values_to = "Minutes")
+
+# Create a density plot for activity distribution throughout the weekdays
+ggplot(daily_intensities_long, aes(x = Minutes, fill = Activity)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~Weekday, ncol = 2) +  # Create separate plots for each weekday
+  labs(title = "Density Plot of Activity Distribution Throughout the Weekdays",
+       x = "Minutes",
+       y = "Density") +
+  scale_fill_manual(values = c("#F09099", "#81B0D8", "#55BF7A", "#ED9837")) +  # Custom colors
+  theme_minimal()
+
+# Reshape the data from wide to long format using the tidyr package
+library(tidyr)
+daily_intensities_long <- daily_intensities %>%
+  pivot_longer(cols = c(SedentaryMinutes, LightlyActiveMinutes, FairlyActiveMinutes, VeryActiveMinutes),
+               names_to = "Activity",
+               values_to = "Minutes")
+
+# Create a density plot for activity distribution throughout the months
+ggplot(daily_intensities_long, aes(x = Minutes, fill = Activity)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~Month, ncol = 3) +  # Create separate plots for each month
+  labs(title = "Density Plot of Activity Distribution Throughout the Months",
+       x = "Minutes",
+       y = "Density") +
+  scale_fill_manual(values = c("#F09099", "#81B0D8", "#55BF7A", "#ED9837")) +  # Custom colors
+  theme_minimal()
+
+# Reshape the data from wide to long format using the tidyr package
+library(tidyr)
+daily_intensities_long <- daily_intensities %>%
+  pivot_longer(cols = c(SedentaryMinutes, LightlyActiveMinutes, FairlyActiveMinutes, VeryActiveMinutes),
+               names_to = "Activity",
+               values_to = "Minutes")
+
+# Create a density plot for activity distribution throughout the year
+ggplot(daily_intensities_long, aes(x = Minutes, fill = Activity)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~Year, ncol = 1) +  # Create a single plot for the entire year
+  labs(title = "Density Plot of Activity Distribution Throughout the Year",
+       x = "Minutes",
+       y = "Density") +
+  scale_fill_manual(values = c("#F09099", "#81B0D8", "#55BF7A", "#ED9837")) +  # Custom colors
+  theme_minimal()
+```
+As we can see from these intensity plots, in minutes are mostly sedentary and some are light active. 
+
+Sleep Dataset:
+
+```{r}
+sleep <- read.csv("fitness/sleepDay_merged.csv")
+str(sleep)
+
+# Check data and remove NA's 
+sum(duplicated(sleep))
+sleep <- sleep %>%
+  distinct() %>%
+  drop_na()
+sum(duplicated(sleep))
+
+# Extract Hour and Minutes using lubridate
+sleep$Hour <- hour(mdy_hms(sleep$SleepDay))
+sleep$Minutes <- minute(mdy_hms(sleep$SleepDay))
+# Extract Month, Year, and Date using lubridate
+sleep$Month <- month(mdy_hms(sleep$SleepDay))
+sleep$Year <- year(mdy_hms(sleep$SleepDay))
+sleep$Day <- date(mdy_hms(sleep$SleepDay))
+
+# Convert the "Day" column to a Date object
+sleep$Day <- as.Date(sleep$Day)
+
+# Create a new column "dayoftheweek" with the day of the week
+sleep$dayoftheweek <- weekdays(sleep$Day)
+
+# If you want to convert the day names to Monday-Sunday format, you can use this:
+sleep$dayoftheweek <- factor(sleep$dayoftheweek, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+# Define custom colors
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a time series plot for TotalMinutesAsleep
+ggplot(data = sleep, aes(x = Day, y = TotalMinutesAsleep)) +
+  geom_line(color = custom_colors[1]) +  # Use the first custom color
+  labs(title = "Time Series Plot of TotalMinutesAsleep",
+       x = "Date",
+       y = "Total Minutes Asleep") +
+  theme_minimal() +
+  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "1 month") +
+  scale_color_manual(values = custom_colors[1])  # Match the color with the line
+
+# Create a time series plot for TotalTimeInBed
+ggplot(data = sleep, aes(x = Day, y = TotalTimeInBed)) +
+  geom_line(color = custom_colors[2]) +  # Use the second custom color
+  labs(title = "Time Series Plot of TotalTimeInBed",
+       x = "Date",
+       y = "Total Time In Bed") +
+  theme_minimal() +
+  scale_x_date(date_labels = "%Y-%m-%d", date_breaks = "1 month") +
+  scale_color_manual(values = custom_colors[2])  # Match the color with the line
+
+# Define custom colors
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a box plot for TotalMinutesAsleep by dayoftheweek
+ggplot(data = sleep, aes(x = dayoftheweek, y = TotalMinutesAsleep, fill = dayoftheweek)) +
+  geom_boxplot() +
+  labs(title = "Box Plot of TotalMinutesAsleep by Day of the Week",
+       x = "Day of the Week",
+       y = "Total Minutes Asleep") +
+  theme_minimal() +
+  scale_fill_manual(values = custom_colors)
+
+# Create a box plot for TotalTimeInBed by dayoftheweek
+ggplot(data = sleep, aes(x = dayoftheweek, y = TotalTimeInBed, fill = dayoftheweek)) +
+  geom_boxplot() +
+  labs(title = "Box Plot of TotalTimeInBed by Day of the Week",
+       x = "Day of the Week",
+       y = "Total Time In Bed") +
+  theme_minimal() +
+  scale_fill_manual(values = custom_colors)
+
+# Define custom colors
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a histogram for TotalMinutesAsleep
+ggplot(data = sleep, aes(x = TotalMinutesAsleep, fill = custom_colors[1])) +
+  geom_histogram(binwidth = 30, color = "black", position = "identity") +
+  labs(title = "Histogram of TotalMinutesAsleep",
+       x = "Total Minutes Asleep",
+       y = "Frequency") +
+  theme_minimal() +
+  scale_fill_manual(values = custom_colors[1])
+
+# Create a histogram for TotalTimeInBed
+ggplot(data = sleep, aes(x = TotalTimeInBed, fill = custom_colors[2])) +
+  geom_histogram(binwidth = 30, color = "black", position = "identity") +
+  labs(title = "Histogram of TotalTimeInBed",
+       x = "Total Time In Bed",
+       y = "Frequency") +
+  theme_minimal() +
+  scale_fill_manual(values = custom_colors[2])
+
+# Define custom colors
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a data frame with average values by month
+average_sleep_by_month <- aggregate(cbind(TotalMinutesAsleep, TotalTimeInBed) ~ Month, data = sleep, FUN = mean)
+average_sleep_by_month
+# Create a bar plot for TotalMinutesAsleep by month
+ggplot(data = average_sleep_by_month, aes(x = factor(Month), y = TotalMinutesAsleep, fill = factor(Month))) +
+  geom_bar(stat = "identity", color = "black") +
+  labs(title = "Average TotalMinutesAsleep by Month",
+       x = "Month",
+       y = "Average Total Minutes Asleep") +
+  theme_minimal() +
+  scale_fill_manual(values = custom_colors)
+
+# Create a bar plot for TotalTimeInBed by month
+ggplot(data = average_sleep_by_month, aes(x = factor(Month), y = TotalTimeInBed, fill = factor(Month))) +
+  geom_bar(stat = "identity", color = "black") +
+  labs(title = "Average TotalTimeInBed by Month",
+       x = "Month",
+       y = "Average Total Time In Bed") +
+  theme_minimal() +
+  scale_fill_manual(values = custom_colors)
+average_sleep_by_month
+
+# Define custom colors
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a data frame with average values by weekday
+average_sleep_by_weekday <- aggregate(cbind(TotalMinutesAsleep, TotalTimeInBed) ~ dayoftheweek, data = sleep, FUN = mean)
+
+# Reorder weekdays to ensure they are in the correct order (Sunday to Saturday)
+average_sleep_by_weekday$dayoftheweek <- factor(average_sleep_by_weekday$dayoftheweek, levels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+
+# Create a bar plot for TotalMinutesAsleep by weekday
+ggplot(data = average_sleep_by_weekday, aes(x = dayoftheweek, y = TotalMinutesAsleep, fill = dayoftheweek)) +
+  geom_bar(stat = "identity", color = "black") +
+  labs(title = "Average TotalMinutesAsleep by Weekday",
+       x = "Weekday",
+       y = "Average Total Minutes Asleep") +
+  theme_minimal() +
+  scale_fill_manual(values = custom_colors)
+
+# Create a bar plot for TotalTimeInBed by weekday
+ggplot(data = average_sleep_by_weekday, aes(x = dayoftheweek, y = TotalTimeInBed, fill = dayoftheweek)) +
+  geom_bar(stat = "identity", color = "black") +
+  labs(title = "Average TotalTimeInBed by Weekday",
+       x = "Weekday",
+       y = "Average Total Time In Bed") +
+  theme_minimal() +
+  scale_fill_manual(values = custom_colors)
+
+# Define custom colors
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a data frame with average values by month and dayoftheweek
+average_sleep_by_month_and_day <- aggregate(cbind(TotalMinutesAsleep, TotalTimeInBed) ~ Month + dayoftheweek, data = sleep, FUN = mean)
+
+# Reorder the levels of dayoftheweek to ensure they are displayed in the correct order
+average_sleep_by_month_and_day$dayoftheweek <- factor(average_sleep_by_month_and_day$dayoftheweek, levels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+
+# Create a heatmap for TotalMinutesAsleep
+ggplot(data = average_sleep_by_month_and_day, aes(x = Month, y = dayoftheweek, fill = TotalMinutesAsleep)) +
+  geom_tile() +
+  labs(title = "Heatmap of Sleep Duration (TotalMinutesAsleep)",
+       x = "Month",
+       y = "Day of the Week",
+       fill = "Average Total Minutes Asleep") +
+  scale_fill_gradientn(colors = custom_colors) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better visibility
+
+# Create a heatmap for TotalTimeInBed
+ggplot(data = average_sleep_by_month_and_day, aes(x = Month, y = dayoftheweek, fill = TotalTimeInBed)) +
+  geom_tile() +
+  labs(title = "Heatmap of Sleep Duration (TotalTimeInBed)",
+       x = "Month",
+       y = "Day of the Week",
+       fill = "Average Total Time In Bed") +
+  scale_fill_gradientn(colors = custom_colors) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better visibility
+
+# Define custom colors
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a scatter plot
+ggplot(data = sleep, aes(x = TotalMinutesAsleep, y = TotalTimeInBed)) +
+  geom_point(color = custom_colors[1], size = 3) +
+  labs(title = "Scatter Plot of TotalMinutesAsleep vs. TotalTimeInBed",
+       x = "Total Minutes Asleep",
+       y = "Total Time In Bed") +
+  theme_minimal() +
+  scale_color_manual(values = custom_colors[1])
+
+# Define custom colors
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a data frame with the count of sleep records by month
+sleep_records_by_month <- data.frame(table(sleep$Month))
+
+# Rename the columns for clarity
+colnames(sleep_records_by_month) <- c("Month", "Count")
+
+# Create a pie chart
+ggplot(data = sleep_records_by_month, aes(x = "", y = Count, fill = factor(Month))) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  labs(title = "Sleep Records by Month",
+       fill = "Month") +
+  theme_void() +
+  scale_fill_manual(values = custom_colors)
+```
+
+Most people rest on a Sunday as expected. During the week most people do not sleep the full 8 hours. 
+
+Weight Dataset:
+
+```{r}
+weight <- read.csv("fitness/weightLogInfo_merged.csv")
+#view(weight)
+str(weight)
+sum(duplicated(weight))
+
+# Load the lubridate package
+library(lubridate)
+
+# Convert the Date column to a proper date-time format
+weight$Date <- as.POSIXct(weight$Date, format = "%m/%d/%Y %I:%M:%S %p")
+
+# Create separate columns for Day, Month, Year, and daysoftheweek
+weight$Day <- day(weight$Date)
+weight$Month <- month(weight$Date)
+weight$Year <- year(weight$Date)
+weight$DayOfWeek <- weekdays(weight$Date)
+
+# Create separate columns for hours, minutes, and seconds
+weight$Hours <- hour(weight$Date)
+weight$Minutes <- minute(weight$Date)
+weight$Seconds <- second(weight$Date)
+
+#view(weight)
+str(weight)
+
+# Create a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a time series plot for WeightKg
+ggplot(data = weight, aes(x = Date)) +
+  geom_line(aes(y = WeightKg, color = DayOfWeek, group = DayOfWeek)) +
+  scale_color_manual(values = custom_colors) +
+  labs(x = "Date", y = "Weight", title = "Weight Over Time by Day of the Week (Kg)") +
+  theme_minimal()
+
+# Create a time series plot for WeightPounds
+ggplot(data = weight, aes(x = Date)) +
+  geom_line(aes(y = WeightPounds, color = DayOfWeek, group = DayOfWeek)) +
+  scale_color_manual(values = custom_colors) +
+  labs(x = "Date", y = "Weight", title = "Weight Over Time by Day of the Week (Pounds)") +
+  theme_minimal()
+
+# Create a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a bar plot for the distribution of measurements across days of the week
+ggplot(data = weight, aes(x = factor(DayOfWeek, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")), fill = DayOfWeek)) +
+  geom_bar() +
+  scale_fill_manual(values = custom_colors) +
+  labs(x = "Day of the Week", y = "Count", title = "Distribution of Measurements by Day of the Week") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Create a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a box plot for WeightKg
+ggplot(data = weight, aes(x = "WeightKg", y = WeightKg)) +
+  geom_boxplot(fill = custom_colors[1]) +
+  labs(x = "", y = "WeightKg", title = "Box Plot of WeightKg") +
+  theme_minimal()
+
+# Create a box plot for WeightPounds
+ggplot(data = weight, aes(x = "WeightPounds", y = WeightPounds)) +
+  geom_boxplot(fill = custom_colors[2]) +
+  labs(x = "", y = "WeightPounds", title = "Box Plot of WeightPounds") +
+  theme_minimal()
+
+# Create a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a histogram for WeightKg
+ggplot(data = weight, aes(x = WeightKg, fill = "WeightKg")) +
+  geom_histogram(binwidth = 2, color = "black") +
+  scale_fill_manual(values = custom_colors[1]) +
+  labs(x = "Weight (Kg)", y = "Frequency", title = "Histogram of WeightKg") +
+  theme_minimal()
+
+# Create a histogram for WeightPounds
+ggplot(data = weight, aes(x = WeightPounds, fill = "WeightPounds")) +
+  geom_histogram(binwidth = 5, color = "black") +
+  scale_fill_manual(values = custom_colors[2]) +
+  labs(x = "Weight (Pounds)", y = "Frequency", title = "Histogram of WeightPounds") +
+  theme_minimal()
+
+# Create a histogram for BMI
+ggplot(data = weight, aes(x = BMI, fill = "BMI")) +
+  geom_histogram(binwidth = 2, color = "black") +
+  scale_fill_manual(values = custom_colors[4]) +
+  labs(x = "BMI", y = "Frequency", title = "Histogram of BMI") +
+  theme_minimal()
+
+# Load the ggplot2 package
+library(ggplot2)
+
+# Create a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2")
+
+# Calculate the proportions of manual and automatic reports
+manual_count <- sum(weight$IsManualReport == "True")
+automatic_count <- nrow(weight) - manual_count
+report_counts <- data.frame(Category = c("Manual", "Automatic"), Count = c(manual_count, automatic_count))
+
+# Calculate the percentage of each category rounded to 2 decimal places
+report_counts$Percentage <- round((report_counts$Count / sum(report_counts$Count)) * 100, 2)
+
+# Create the pie chart with percentages
+ggplot(data = report_counts, aes(x = "", y = Percentage, fill = Category)) +
+  geom_bar(stat = "identity") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(values = custom_colors) +
+  labs(fill = "Report Type") +
+  theme_void() +
+  theme(legend.position = "bottom") +
+  ggtitle("Proportion of Manual vs. Automatic Reports") +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_stack(vjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+# Load the ggplot2 and reshape2 packages
+library(ggplot2)
+library(reshape2)
+
+# Create a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Select numeric variables for correlation analysis
+numeric_vars <- c("WeightKg", "WeightPounds", "Fat", "BMI")  # Add other variables as needed
+
+# Subset the data to include only the selected numeric variables
+numeric_data <- weight[, numeric_vars]
+
+# Calculate the correlation matrix
+correlation_matrix <- cor(numeric_data)
+
+# Create a heatmap of the correlation matrix
+ggplot(data = melt(correlation_matrix), aes(Var2, Var1, fill = value)) +
+  geom_tile() +
+  scale_fill_gradientn(colors = custom_colors, limits = c(-1, 1)) +
+  labs(title = "Correlation Heatmap", x = "Variable", y = "Variable") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Load the ggplot2 package
+library(ggplot2)
+
+# Create a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a line chart for WeightKg variation by Hours of the day
+ggplot(data = weight, aes(x = Hours, y = WeightKg, group = 1)) +
+  geom_line(color = custom_colors[1]) +
+  labs(x = "Hour of the Day", y = "WeightKg", title = "WeightKg Variation by Hour of the Day") +
+  theme_minimal()
+
+# Create a line chart for WeightPounds variation by Hours of the day
+ggplot(data = weight, aes(x = Hours, y = WeightPounds, group = 1)) +
+  geom_line(color = custom_colors[2]) +
+  labs(x = "Hour of the Day", y = "WeightPounds", title = "WeightPounds Variation by Hour of the Day") +
+  theme_minimal()
+```
+WeightKg and WeightPounds variation by hour of the day are very similar. 
+
+
+MET Dataset:
+
+```{r}
+minute_met_narrow <- read.csv("fitness/minuteMETsNarrow_merged.csv")
+str(minute_met_narrow)
+view(minute_met_narrow)
+
+minute_met_narrow <- minute_met_narrow %>%
+  mutate(
+    ActivityMinute = as.POSIXct(ActivityMinute, format = "%m/%d/%Y %I:%M:%S %p"),
+    Day = as.integer(format(ActivityMinute, "%d")),
+    Month = as.integer(format(ActivityMinute, "%m")),
+    Year = as.integer(format(ActivityMinute, "%Y")),
+    Hours = as.integer(format(ActivityMinute, "%H")),
+    Minutes = as.integer(format(ActivityMinute, "%M")),
+    Seconds = as.integer(format(ActivityMinute, "%S"))
+  )
+
+view(minute_met_narrow)
+
+# Extract Hour and Minutes using lubridate
+# minute_met_narrow$Hour <- hour(mdy_hms(minute_met_narrow$ActivityMinute))
+# minute_met_narrow$Minutes <- minute(mdy_hms(minute_met_narrow$ActivityMinute))
+# Extract Month, Year, and Date using lubridate
+# minute_met_narrow$Month <- month(mdy_hms(minute_met_narrow$ActivityMinute))
+# minute_met_narrow$Year <- year(mdy_hms(minute_met_narrow$ActivityMinute))
+# minute_met_narrow$Day <- date(mdy_hms(minute_met_narrow$ActivityMinute))
+
+# Convert the "Day" column to a Date object
+minute_met_narrow$Day <- as.Date(minute_met_narrow$Day)
+
+# Create a new column "dayoftheweek" with the day of the week
+minute_met_narrow$dayoftheweek <- weekdays(minute_met_narrow$Day)
+
+# If you want to convert the day names to Monday-Sunday format, you can use this:
+minute_met_narrow$dayoftheweek <- factor(minute_met_narrow$dayoftheweek, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+view(minute_met_narrow)
+
+# Create a custom color palette
+custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
+
+# Create a ggplot object
+ggplot(minute_met_narrow, aes(x = ActivityMinute, y = METs, color = dayoftheweek)) +
+  geom_line() +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Time",
+    y = "METs",
+    title = "METs Over Time by Day of the Week"
+  ) +
+  theme_minimal()
+
+  # Group by hour and day of the week, calculate the average METs
+  heatmap_data <- minute_met_narrow %>%
+    group_by(Hours, dayoftheweek) %>%
+    summarise(Avg_METs = mean(METs))
+  
+  # Create a ggplot object for the heatmap
+ggplot(heatmap_data, aes(x = Hours, y = dayoftheweek, fill = Avg_METs)) +
+    geom_tile() +
+    scale_fill_gradient(low = "#D19CBA", high = "#E59C1D") +  # Use custom colors
+    labs(
+      x = "Hour of the Day",
+      y = "Day of the Week",
+      fill = "Average METs",
+      title = "Heatmap of METs by Hour and Day of the Week"
+    ) +
+    theme_minimal()
+
+ggplot(minute_met_narrow, aes(x = Hours, y = METs)) +
+  geom_point() +
+  facet_wrap(~ dayoftheweek, scales = "free_y", ncol = 3) +
+  labs(
+    x = "Hour of the Day",
+    y = "METs",
+    title = "Scatter Plots of METs by Hour (Faceted by Day of the Week)"
+  ) +
+  theme_minimal()
+
+# Calculate the average METs value for each day
+avg_METs_by_day <- minute_met_narrow %>%
+  mutate(Date = as.Date(ActivityMinute)) %>%
+  group_by(Date) %>%
+  summarise(Avg_METs = mean(METs))
+
+# Create an interactive calendar heatmap
+avg_METs_by_day %>%
+  plot_ly(x = ~Date, y = ~Avg_METs, z = ~Avg_METs, type = "heatmap", colors = custom_colors) %>%
+  colorbar(title = "Average METs") %>%
+  layout(
+    title = "Interactive Calendar Heatmap of Average METs",
+    xaxis = list(type = "category", title = "Day"),
+    yaxis = list(title = "Average METs"),
+    margin = list(l = 50, r = 50, b = 100)
+  )
+
+```
 
 # 7. Act
 :muscle: 7. 
+
+From the findings above I provide the following suggestions:
+- Steps reminder notifications: As the majority of people using the devices do not reach the average 10000 steps. A reminder can be sent with a vibration to the device to remind people during the peak hours of the day to walk, exercise and burn more calories. 
+- Workout Reminders: These can be sent to remind people to workout in their time during the day, either morning, during lunch, or after working hours. 
+- A reward system: People can receive medals, or discounts if they reach a certain number of workouts, hours, or calories burnt in a month or their daily goals. Incentives are a great way to keep people active, allowing people to gain premium memberships or discounts on the latest devices. 
+- Many people forget to track their sleep, steps, and calories burnt. A reminder to monitor these can also be sent with a reward system giving the people a breakdown of their sleeping patterns (Deep sleep, Light sleep, naps, and REM's) if they sleep 8 hours everyday. 
+- The device can monitor these regardless but one can also incorporate the battery having to be charged and add a reminder everytime the battery gets charged to manually log sleep or activities once the device wakes up. 
+- The app can send workout suggestions and incorporate the days of activeness to send the reminder at the appropriate times for individual users. 
+- Since most people are more active on weekends, more reminders can be sent on these days with a reminder to drink water. 
+- Add short exercises for mornings and evenings. 
+- A reminder noise or vibration can be sent especially during long periods of no steps taken, or long sedentary minutes, when to wake up, and when to go sleep. 
+
+

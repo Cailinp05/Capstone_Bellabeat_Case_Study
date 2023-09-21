@@ -137,11 +137,11 @@ total_steps <- daily_activity %>% group_by(Ymd) %>%
   summarise( Steps = sum(TotalSteps,na.rm=TRUE), 
              Mean = mean(TotalSteps, na.rm=TRUE))
 ggplot(total_steps) + geom_line(aes(x=Ymd, y=Steps)) +
-  labs(title="Total Steps By Day") + 
+  labs(title="Total Steps By Day for 2016") + 
   scale_y_continuous(labels= comma)
 
 ggplot(total_steps) + geom_line(aes(x=Ymd, y=Mean)) +
-  labs(title="Average Steps By Day") + 
+  labs(title="Average Steps By Day for 2016") + 
   scale_y_continuous(labels= comma)
 
 # total_distance and view
@@ -150,11 +150,11 @@ total_distance <- daily_activity %>% group_by(Ymd) %>%
              Mean = mean(TotalDistance, na.rm=TRUE))
 
 ggplot(total_distance) + geom_line(aes(x=Ymd, y=Distance)) +
-  labs(title="Total Distance By Date", y= "Total Distance") + 
+  labs(title="Total Distance By Date for 2016", y= "Total Distance") + 
   scale_y_continuous(labels= comma)
 
 ggplot(total_distance) + geom_line(aes(x=Ymd, y=Mean)) +
-  labs(title="Average Distance By Date", y= "Total Distance") + 
+  labs(title="Average Distance By Date for 2016", y= "Total Distance") + 
   scale_y_continuous(labels= comma)
 
 # Okay so what all can I focus on and plot to answer the questions?
@@ -330,10 +330,11 @@ ggplot(hourly_steps_calories, aes(x = StepTotal, y = Calories, color = Day)) +
   theme_minimal()  # Use a minimalistic theme for better readability
 
 # Correlations daily steps vs daily sleep ---------------------------------
+daily_steps <- read.csv("fitness/dailySteps_merged.csv")
 str(daily_steps)
 
 # Convert ActivityDay to a Date object
-daily_steps$ActivityDay <- as.Date(daily_steps$ActivityDay, format = "%m/%d/%Y %I:%M:%S %p")
+daily_steps$ActivityDay <- as.Date(daily_steps$ActivityDay, format = "%m/%d/%Y")
 
 # Create separate columns for Day, Month, and Year
 daily_steps <- daily_steps %>%
@@ -595,7 +596,9 @@ library(gganimate)
 library(gifski)
 library(av)
 library(transformr)
+
 #animating the above plot
+
 plot1 <- p1+transition_reveal(as.numeric(Day))
 
 animate(plot1)
@@ -1313,6 +1316,8 @@ sleep_records_by_month <- data.frame(table(sleep$Month))
 # Rename the columns for clarity
 colnames(sleep_records_by_month) <- c("Month", "Count")
 
+str(sleep_records_by_month)
+
 # Create a pie chart
 ggplot(data = sleep_records_by_month, aes(x = "", y = Count, fill = factor(Month))) +
   geom_bar(stat = "identity", width = 1) +
@@ -1327,6 +1332,22 @@ weight <- read.csv("fitness/weightLogInfo_merged.csv")
 view(weight)
 str(weight)
 sum(duplicated(weight))
+
+# Calculate the average BMI
+average_bmi <- mean(weight$BMI, na.rm = TRUE)
+average_bmi
+
+# Print the average BMI
+cat("Average BMI:", round(average_bmi, 2), "\n")
+
+# Create a plot of the average BMI
+ggplot(data = weight, aes(x = 1, y = BMI)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "blue") +
+  geom_text(aes(label = round(average_bmi, 2)), vjust = -0.5) +
+  labs(x = NULL, y = "Average BMI") +
+  theme_minimal()
+
+weight <- read.csv("fitness/weightLogInfo_merged.csv")
 
 # Load the lubridate package
 library(lubridate)

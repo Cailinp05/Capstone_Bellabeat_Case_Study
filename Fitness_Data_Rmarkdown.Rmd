@@ -3,6 +3,7 @@ title: "Fitness_Data_Rmarkdown"
 author: "Cailin Pillay"
 date: "2023-08-28"
 output: html_document
+runtime: shiny
 ---
 
 Step 1: Load the packages. 
@@ -164,6 +165,8 @@ total_steps <- daily_activity %>% group_by(Ymd) %>%
     scale_y_continuous(labels= comma)
 ```
 
+total_steps mean and view 
+
 ```{r}
 ggplot(total_steps) + geom_line(aes(x=Ymd, y=Mean)) +
     labs(title="Average Steps By Day") + 
@@ -181,6 +184,8 @@ total_distance <- daily_activity %>% group_by(Ymd) %>%
     labs(title="Total Distance By Date", y= "Total Distance") + 
     scale_y_continuous(labels= comma)
 ```
+
+total_distance average and view
 
 ```{r}
 ggplot(total_distance) + geom_line(aes(x=Ymd, y=Mean)) +
@@ -355,10 +360,11 @@ ggplot(hourly_steps_calories, aes(x = StepTotal, y = Calories, color = Day)) +
 Correlations daily steps vs daily sleep
 
 ```{r}
+daily_steps <- read.csv("fitness/dailySteps_merged.csv")
 str(daily_steps)
 
 # Convert ActivityDay to a Date object
-daily_steps$ActivityDay <- as.Date(daily_steps$ActivityDay, format = "%m/%d/%Y %I:%M:%S %p")
+daily_steps$ActivityDay <- as.Date(daily_steps$ActivityDay, format = "%m/%d/%Y")
 
 # Create separate columns for Day, Month, and Year
 daily_steps <- daily_steps %>%
@@ -491,6 +497,7 @@ ggplot(daily_activity_sleep, aes(x = TotalSteps, y = VeryActiveMinutes, size = T
 ```
 
 Pie chart of activity 
+
 ```{r}
 str(daily_activity)
 library(scales)
@@ -574,6 +581,7 @@ ggplot(pie_data_distance, aes(x = "", y = Percentage, fill = Category)) +
 ```
 
 Heartrate Dataset:
+
 ```{r}
 heartrate <- read.csv("fitness/heartrate_seconds_merged.csv")
 str(heartrate)
@@ -624,10 +632,10 @@ p1 <- ggplot(heart_rate, aes(x = Day, y = mean_heart_rate, color = Month)) +
 
 p1
 
-install.packages("gganimate")
-install.packages("gifski")
-install.packages("av")
-install.packages("transformr")
+#install.packages("gganimate")
+#install.packages("gifski")
+#install.packages("av")
+#install.packages("transformr")
 library(gganimate)
 library(gifski)
 library(av)
@@ -640,6 +648,7 @@ animate(plot1)
 ```
 
 Daily Steps Dataset:
+
 ```{r}
 daily_steps <- read.csv("fitness/dailySteps_merged.csv")
 
@@ -715,6 +724,7 @@ ggplot(daily_steps_aggregated, aes(x = Weekday, y = TotalSteps, fill = Weekday))
 ```
 
 Daily Caolires Dataset:
+
 ```{r}
 daily_calories <- read.csv("fitness/dailyCalories_merged.csv")
 
@@ -804,6 +814,7 @@ print(heatmap_plot)
 ```
 
 Daily Intensity Dataset:
+
 ```{r}
 daily_intensities <- read.csv("fitness/dailyIntensities_merged.csv")
 
@@ -1145,6 +1156,7 @@ shinyApp(ui = ui, server = server)
 ```
 
 Sleep Dataset:
+
 ```{r}
 sleep <- read.csv("fitness/sleepDay_merged.csv")
 str(sleep)
@@ -1353,11 +1365,28 @@ ggplot(data = sleep_records_by_month, aes(x = "", y = Count, fill = factor(Month
 ```
 
 Weight Dataset:
+
 ```{r}
 weight <- read.csv("fitness/weightLogInfo_merged.csv")
 view(weight)
 str(weight)
 sum(duplicated(weight))
+
+# Calculate the average BMI
+average_bmi <- mean(weight$BMI, na.rm = TRUE)
+average_bmi
+
+# Print the average BMI
+cat("Average BMI:", round(average_bmi, 2), "\n")
+
+# Create a plot of the average BMI
+ggplot(data = weight, aes(x = 1, y = BMI)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "blue") +
+  geom_text(aes(label = round(average_bmi, 2)), vjust = -0.5) +
+  labs(x = NULL, y = "Average BMI") +
+  theme_minimal()
+
+weight <- read.csv("fitness/weightLogInfo_merged.csv")
 
 # Load the lubridate package
 library(lubridate)
@@ -1376,7 +1405,7 @@ weight$Hours <- hour(weight$Date)
 weight$Minutes <- minute(weight$Date)
 weight$Seconds <- second(weight$Date)
 
-view(weight)
+#view(weight)
 str(weight)
 
 # Create a custom color palette
@@ -1515,11 +1544,14 @@ ggplot(data = weight, aes(x = Hours, y = WeightPounds, group = 1)) +
   theme_minimal()
 ```
 
+The average of BMI is 25.19 which is slightly grater than the healthy BMI range which is between 18 and 24.9.Only 8 people are in this weight dataset. 
+
 MET Dataset:
+
 ```{r}
 minute_met_narrow <- read.csv("fitness/minuteMETsNarrow_merged.csv")
 str(minute_met_narrow)
-view(minute_met_narrow)
+# view(minute_met_narrow)
 
 minute_met_narrow <- minute_met_narrow %>%
   mutate(
@@ -1532,7 +1564,7 @@ minute_met_narrow <- minute_met_narrow %>%
     Seconds = as.integer(format(ActivityMinute, "%S"))
   )
 
-view(minute_met_narrow)
+# view(minute_met_narrow)
 
 # Extract Hour and Minutes using lubridate
 # minute_met_narrow$Hour <- hour(mdy_hms(minute_met_narrow$ActivityMinute))
@@ -1551,7 +1583,7 @@ minute_met_narrow$dayoftheweek <- weekdays(minute_met_narrow$Day)
 # If you want to convert the day names to Monday-Sunday format, you can use this:
 minute_met_narrow$dayoftheweek <- factor(minute_met_narrow$dayoftheweek, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
 
-view(minute_met_narrow)
+# view(minute_met_narrow)
 
 # Create a custom color palette
 custom_colors <- c("#D19CBA", "#9FAAD2", "#55B8CD", "#1AC0A7", "#5CBF6B", "#A2B52F", "#E59C1D")
@@ -1612,3 +1644,4 @@ avg_METs_by_day %>%
   )
 
 ```
+
