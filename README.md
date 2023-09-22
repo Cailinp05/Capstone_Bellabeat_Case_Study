@@ -171,6 +171,7 @@ ggplot(daily_steps_aggregated, aes(x = Weekday, y = TotalSteps, fill = Weekday))
   labs(x = "Days of the week", y = "Total Steps", title = "Total Steps Taken Per Weekday with Custom Colors") +
   theme_minimal()
 ```
+![Total Steps Taken Per Weekday with Custom Colors](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Weekday%20with%20Custom%20Colors.png)
 
 Average Steps Analysis:
 ```{r}
@@ -178,6 +179,7 @@ ggplot(total_steps) + geom_line(aes(x=Ymd, y=Mean)) +
     labs(title="Average Steps By Day") + 
     scale_y_continuous(labels= comma)
 ```
+![Average Steps By Day](![Average Steps By Day](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20Steps%20By%20Day.png)
 
 From this we can see that majority of people are not walking the average daily steps of 10000. 
 
@@ -187,6 +189,9 @@ ggplot(total_distance) + geom_line(aes(x=Ymd, y=Mean)) +
      labs(title="Average Distance By Date", y= "Total Distance") + 
      scale_y_continuous(labels= comma)
 ```
+
+![Average Distance By Date](![Average Distance By Date](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20Distance%20By%20Date.png)
+
 This is very similar to average steps with the same dip in the graph towards the end. 
 
 I then merged the two datasets as below:
@@ -203,6 +208,8 @@ I then merged the two datasets as below:
           y = "Count") +
      scale_color_manual(values = c("Total Steps" = "blue", "Calories" = "red"))
 ```
+![Average Daily Steps and Calories](![Average Daily Steps and Calories](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20Daily%20Steps%20and%20Calories.png)
+
  As expected, the more steps people take, the more calories they burn.
  
 Sleep vs Activity Analysis:
@@ -256,6 +263,10 @@ ggplot(daily_activity_sleep, aes(x = TotalSteps, y = VeryActiveMinutes, size = T
   scale_size_continuous(range = c(3, 10)) +
   theme_minimal()
 ```
+
+![Sleep vs Activity Analysis](![Composition of Activity Levels Over Time](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Composition%20of%20Activity%20Levels%20Over%20Time.png)
+
+![Sleep vs Activity Analysis](![Relationship Between Steps, Activity, and Sleep](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Relationship%20Between%20Steps%2C%20Activity%2C%20and%20Sleep.png)
 
 From this we can see that people do not sleep enough hours and are not as active as they should be. Specifically, majority of people are lightly active, but more people are sedentary.  
 
@@ -311,6 +322,8 @@ p1 <- ggplot(heart_rate, aes(x = Day, y = mean_heart_rate, color = Month)) +
 
 p1
 ```
+![Daily Mean Heart Rate](![Daily Mean Heart Rate](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Daily%20Mean%20Heartrate.png)
+
 This shows the heartrate for both months. Due to heartrate dataset, I wanted to animate it for fun as such:
 
 ```{r}
@@ -323,6 +336,7 @@ plot1 <- p1+transition_reveal(as.numeric(Day))
 
 animate(plot1)
 ```
+
 Daily Steps Analysis for days of the week with custom colors:
 
 ```{r}
@@ -398,6 +412,11 @@ ggplot(daily_steps_aggregated, aes(x = Weekday, y = TotalSteps, fill = Weekday))
   labs(x = "Days of the week", y = "Total Steps", title = "Total Steps Taken Per Weekday with Custom Colors") +
   theme_minimal()
 ```
+![Total Steps Taken Per Day by Year](![Total Steps Taken Per Day by Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Day%20by%20Year.png)
+
+![Total Steps Taken Per Day by Month](![Total Steps Taken Per Day by Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Day%20by%20Month.png)
+
+![Total Steps Taken Per Weekday with Custom Colors](![Total Steps Taken Per Weekday with Custom Colors](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Weekday%20with%20Custom%20Colors.png)
 
 Here we can see that there is a spike on a Tuesday and most people rest on Sundays. We can see the same for calories:
 
@@ -488,6 +507,15 @@ heatmap_plot <- ggplot(monthly_total_calories, aes(x = Month, y = Year, fill = T
 # Display the heatmap
 print(heatmap_plot)
 ```
+
+![Total Calories Burned Daily](![Total Calories Burned Daily](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Daily.png)
+
+![Total Calories Burned Per Month](![Total Calories Burned Per Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month.png)
+
+![Total Calories Burned Per Weekday](![Total Calories Burned Per Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Weekday.png)
+
+![Total Calories Burned Per Month and Year](![Total Calories Burned Per Month and Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month%20and%20Year.png)
+
 Daily Intensity Dataset:
 
 ```{r}
@@ -792,6 +820,45 @@ ggplot(daily_intensities_long, aes(x = Minutes, fill = Activity)) +
   scale_fill_manual(values = c("#F09099", "#81B0D8", "#55BF7A", "#ED9837")) +  # Custom colors
   theme_minimal()
 ```
+
+![Distribution of Activity Levels](![Distribution of Activity Levels](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Levels.png)
+
+![Distribution of Activity Levels](![Distribution of Activity Levels](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Levels_2.png)
+
+
+![Distribution of Activity Levels](![Distribution of Activity Levels](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Levels_3.png)
+
+
+![Total Activities per Weekday](![Total Activities per Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Activities%20per%20Weekday.png)
+
+![Total Activities per Month](![Total Activities per Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Activities%20per%20Month.png)
+
+![Total Activities per Year](![Total Activities per Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Activities%20for%20the%20Year.png)
+
+![Distribution of Lightly Active Minutes](![Distribution of Lightly Active Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Lightly%20Active%20Minutes.png)
+
+![Total Calories Burned Per Month and Year](![Total Calories Burned Per Month and Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month%20and%20Year.png)
+
+![Total Calories Burned Per Month and Year](![Total Calories Burned Per Month and Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month%20and%20Year.png)
+
+![Total Calories Burned Per Month and Year](![Total Calories Burned Per Month and Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month%20and%20Year.png)
+
+![Total Calories Burned Per Month and Year](![Total Calories Burned Per Month and Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month%20and%20Year.png)
+
+![Total Calories Burned Per Month and Year](![Total Calories Burned Per Month and Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month%20and%20Year.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
 As we can see from these intensity plots, in minutes are mostly sedentary and some are light active. 
 
 Sleep Dataset:
