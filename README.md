@@ -179,7 +179,7 @@ ggplot(total_steps) + geom_line(aes(x=Ymd, y=Mean)) +
     labs(title="Average Steps By Day") + 
     scale_y_continuous(labels= comma)
 ```
-![Average Steps By Day](![Average Steps By Day](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20Steps%20By%20Day.png)
+![Average Steps By Day](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20Steps%20By%20Day.png)
 
 From this we can see that majority of people are not walking the average daily steps of 10000. 
 
