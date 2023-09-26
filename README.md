@@ -190,7 +190,7 @@ ggplot(total_distance) + geom_line(aes(x=Ymd, y=Mean)) +
      scale_y_continuous(labels= comma)
 ```
 
-![Average Distance By Date](![Average Distance By Date](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20Distance%20By%20Date.png)
+![Average Distance By Date](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20Distance%20By%20Date.png)
 
 This is very similar to average steps with the same dip in the graph towards the end. 
 
@@ -208,7 +208,7 @@ I then merged the two datasets as below:
           y = "Count") +
      scale_color_manual(values = c("Total Steps" = "blue", "Calories" = "red"))
 ```
-![Average Daily Steps and Calories](![Average Daily Steps and Calories](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20Daily%20Steps%20and%20Calories.png)
+![Average Daily Steps and Calories](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20Daily%20Steps%20and%20Calories.png)
 
  As expected, the more steps people take, the more calories they burn.
  
@@ -264,9 +264,9 @@ ggplot(daily_activity_sleep, aes(x = TotalSteps, y = VeryActiveMinutes, size = T
   theme_minimal()
 ```
 
-![Sleep vs Activity Analysis](![Composition of Activity Levels Over Time](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Composition%20of%20Activity%20Levels%20Over%20Time.png)
+![Sleep vs Activity Analysis](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Composition%20of%20Activity%20Levels%20Over%20Time.png)
 
-![Sleep vs Activity Analysis](![Relationship Between Steps, Activity, and Sleep](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Relationship%20Between%20Steps%2C%20Activity%2C%20and%20Sleep.png)
+![Sleep vs Activity Analysis](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Relationship%20Between%20Steps%2C%20Activity%2C%20and%20Sleep.png)
 
 From this we can see that people do not sleep enough hours and are not as active as they should be. Specifically, majority of people are lightly active, but more people are sedentary.  
 
@@ -322,7 +322,7 @@ p1 <- ggplot(heart_rate, aes(x = Day, y = mean_heart_rate, color = Month)) +
 
 p1
 ```
-![Daily Mean Heart Rate](![Daily Mean Heart Rate](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Daily%20Mean%20Heartrate.png)
+![Daily Mean Heart Rate](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Daily%20Mean%20Heartrate.png)
 
 This shows the heartrate for both months. Due to heartrate dataset, I wanted to animate it for fun as such:
 
@@ -412,11 +412,11 @@ ggplot(daily_steps_aggregated, aes(x = Weekday, y = TotalSteps, fill = Weekday))
   labs(x = "Days of the week", y = "Total Steps", title = "Total Steps Taken Per Weekday with Custom Colors") +
   theme_minimal()
 ```
-![Total Steps Taken Per Day by Year](![Total Steps Taken Per Day by Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Day%20by%20Year.png)
+![Total Steps Taken Per Day by Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Day%20by%20Year.png)
 
-![Total Steps Taken Per Day by Month](![Total Steps Taken Per Day by Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Day%20by%20Month.png)
+![Total Steps Taken Per Day by Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Day%20by%20Month.png)
 
-![Total Steps Taken Per Weekday with Custom Colors](![Total Steps Taken Per Weekday with Custom Colors](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Weekday%20with%20Custom%20Colors.png)
+![Total Steps Taken Per Weekday with Custom Colors](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Steps%20Taken%20Per%20Weekday%20with%20Custom%20Colors.png)
 
 Here we can see that there is a spike on a Tuesday and most people rest on Sundays. We can see the same for calories:
 
@@ -508,13 +508,13 @@ heatmap_plot <- ggplot(monthly_total_calories, aes(x = Month, y = Year, fill = T
 print(heatmap_plot)
 ```
 
-![Total Calories Burned Daily](![Total Calories Burned Daily](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Daily.png)
+![Total Calories Burned Daily](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Daily.png)
 
-![Total Calories Burned Per Month](![Total Calories Burned Per Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month.png)
+![Total Calories Burned Per Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month.png)
 
-![Total Calories Burned Per Weekday](![Total Calories Burned Per Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Weekday.png)
+![Total Calories Burned Per Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Weekday.png)
 
-![Total Calories Burned Per Month and Year](![Total Calories Burned Per Month and Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month%20and%20Year.png)
+![Total Calories Burned Per Month and Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Calories%20Burned%20Per%20Month%20and%20Year.png)
 
 Daily Intensity Dataset:
 
@@ -821,41 +821,41 @@ ggplot(daily_intensities_long, aes(x = Minutes, fill = Activity)) +
   theme_minimal()
 ```
 
-![Distribution of Activity Levels](![Distribution of Activity Levels](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Levels.png)
+![Distribution of Activity Levels](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Levels.png)
 
-![Distribution of Activity Levels](![Distribution of Activity Levels](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Levels_2.png)
-
-
-![Distribution of Activity Levels](![Distribution of Activity Levels](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Levels_3.png)
+![Distribution of Activity Levels](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Levels_2.png)
 
 
-![Total Activities per Weekday](![Total Activities per Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Activities%20per%20Weekday.png)
+![Distribution of Activity Levels](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Levels_3.png)
 
-![Total Activities per Month](![Total Activities per Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Activities%20per%20Month.png)
 
-![Total Activities per Year](![Total Activities per Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Activities%20for%20the%20Year.png)
+![Total Activities per Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Activities%20per%20Weekday.png)
 
-![Distribution of Sedentary Minutes](![Distribution of Sedentary Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Sedentary%20Minutes.png)
+![Total Activities per Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Activities%20per%20Month.png)
 
-![Distribution of Lightly Active Minutes](![Distribution of Lightly Active Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Lightly%20Active%20Minutes.png)
+![Total Activities per Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Total%20Activities%20for%20the%20Year.png)
 
-![Distribution of Fairly Active Minutes](![Distribution of Fairly Active Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Fairly%20Active%20Minutes.png)
+![Distribution of Sedentary Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Sedentary%20Minutes.png)
 
-![Distribution of Very Active Minutes](![Distribution of Very Active Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Very%20Active%20Minutes.png)
+![Distribution of Lightly Active Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Lightly%20Active%20Minutes.png)
 
-![Time Series of Activity Minutes](![Time Series of Activity Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Time%20Series%20of%20Activity%20Minutes.png)
+![Distribution of Fairly Active Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Fairly%20Active%20Minutes.png)
 
-![Distribution of Activity Minutes by Weekday](![Distribution of Activity Minutes by Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Minutes%20by%20Weekday.png)
+![Distribution of Very Active Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Very%20Active%20Minutes.png)
 
-![Scatter Plot: Sedentary vs. Lightly Active Minutes and Scatter Plot: Fairly Active vs. Very Active Minutes](![Scatter Plot: Sedentary vs. Lightly Active Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Scatter%20Plot.png)
+![Time Series of Activity Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Time%20Series%20of%20Activity%20Minutes.png)
 
-![Density Plot of Activity Distribution Throughout the Day](![Density Plot of Activity Distribution Throughout the Day](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Day.png)
+![Distribution of Activity Minutes by Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Activity%20Minutes%20by%20Weekday.png)
 
-![Density Plot of Activity Distribution Throughout the Weekdays](![Density Plot of Activity Distribution Throughout the Weekdays](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Weekdays.png)
+![Scatter Plot: Sedentary vs. Lightly Active Minutes and Scatter Plot: Fairly Active vs. Very Active Minutes](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Scatter%20Plot.png)
 
-![Density Plot of Activity Distribution Throughout the Months](![Density Plot of Activity Distribution Throughout the Months](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Months.pngg)
+![Density Plot of Activity Distribution Throughout the Day](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Day.png)
 
-![Density Plot of Activity Distribution Throughout the Year](![Density Plot of Activity Distribution Throughout the Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Year.png)
+![Density Plot of Activity Distribution Throughout the Weekdays](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Weekdays.png)
+
+![Density Plot of Activity Distribution Throughout the Months](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Months.pngg)
+
+![Density Plot of Activity Distribution Throughout the Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Year.png)
 
 
 As we can see from these intensity plots, in minutes are mostly sedentary and some are light active. 
@@ -1069,29 +1069,29 @@ ggplot(data = sleep_records_by_month, aes(x = "", y = Count, fill = factor(Month
   scale_fill_manual(values = custom_colors)
 ```
 
-![Time Series Plot of TotalMinutesAsleep](![Time Series Plot of TotalMinutesAsleep](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Time%20Series%20Plot%20of%20TotalMinutesAsleep.png)
+![Time Series Plot of TotalMinutesAsleep](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Time%20Series%20Plot%20of%20TotalMinutesAsleep.png)
 
-![Time Series Plot of TotalTimeInBed](![Time Series Plot of TotalTimeInBed](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Time%20Series%20Plot%20of%20TotalTimeInBed.png)
+![Time Series Plot of TotalTimeInBed](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Time%20Series%20Plot%20of%20TotalTimeInBed.png)
 
-![Box Plot of TotalMinutesAsleep by Day of the Week](![Box Plot of TotalMinutesAsleep by Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Box%20Plot%20of%20TotalMinutesAsleep%20by%20Day%20of%20the%20Week.png)
+![Box Plot of TotalMinutesAsleep by Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Box%20Plot%20of%20TotalMinutesAsleep%20by%20Day%20of%20the%20Week.png)
 
-![Box Plot of TotalTimeInBed by Day of the Week](![Box Plot of TotalTimeInBed by Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Box%20Plot%20of%20TotalTimeInBed%20by%20Day%20of%20the%20Week.png)
+![Box Plot of TotalTimeInBed by Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Box%20Plot%20of%20TotalTimeInBed%20by%20Day%20of%20the%20Week.png)
 
-![Histogram of TotalMinutesAsleep](![Histogram of TotalMinutesAsleep](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20TotalMinutesAsleep.png)
+![Histogram of TotalMinutesAsleep](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20TotalMinutesAsleep.png)
 
-![Histogram of TotalTimeInBed](![Histogram of TotalTimeInBed](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20TotalTimeInBed.png)
+![Histogram of TotalTimeInBed](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20TotalTimeInBed.png)
 
-![Average TotalMinutesAsleep by Weekday](![Average TotalMinutesAsleep by Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20TotalMinutesAsleep%20by%20Weekday.png)
+![Average TotalMinutesAsleep by Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20TotalMinutesAsleep%20by%20Weekday.png)
 
-![Average TotalTimeInBed by Weekday](![Average TotalTimeInBed by Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20TotalTimeInBed%20by%20Weekday.png)
+![Average TotalTimeInBed by Weekday](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Average%20TotalTimeInBed%20by%20Weekday.png)
 
-![Heatmap of Sleep Duration (TotalMinutesAsleep)](![Heatmap of Sleep Duration (TotalMinutesAsleep)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Heatmap%20of%20Sleep%20Duration%20(TotalMinutesAsleep).png)
+![Heatmap of Sleep Duration (TotalMinutesAsleep)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Heatmap%20of%20Sleep%20Duration%20(TotalMinutesAsleep).png)
 
-![Heatmap of Sleep Duration (TotalTimeInBed)](![Heatmap of Sleep Duration (TotalTimeInBed)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Heatmap%20of%20Sleep%20Duration%20(TotalTimeInBed).png)
+![Heatmap of Sleep Duration (TotalTimeInBed)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Heatmap%20of%20Sleep%20Duration%20(TotalTimeInBed).png)
 
-![Scatter Plot of TotalMinutesAsleep vs. TotalTimeInBed](![Scatter Plot of TotalMinutesAsleep vs. TotalTimeInBed](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Scatter%20Plot%20of%20TotalMinutesAsleep%20vs.%20TotalTimeInBed.png)
+![Scatter Plot of TotalMinutesAsleep vs. TotalTimeInBed](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Scatter%20Plot%20of%20TotalMinutesAsleep%20vs.%20TotalTimeInBed.png)
 
-![Sleep Records by Month](![Sleep Records by Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Sleep%20Records%20by%20Month.png)
+![Sleep Records by Month](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Sleep%20Records%20by%20Month.png)
 
 Most people rest on a Sunday as expected. During the week most people do not sleep the full 8 hours. 
 
@@ -1259,29 +1259,29 @@ ggplot(data = weight, aes(x = Hours, y = WeightPounds, group = 1)) +
   theme_minimal()
 ```
 
-![Weight Over Time by Day of the Week (Kg)](![Weight Over Time by Day of the Week (Kg)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Weight%20Over%20Time%20by%20Day%20of%20the%20Week%20(Kg).png)
+![Weight Over Time by Day of the Week (Kg)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Weight%20Over%20Time%20by%20Day%20of%20the%20Week%20(Kg).png)
 
-![Weight Over Time by Day of the Week (Pounds)](![Weight Over Time by Day of the Week (Pounds)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Weight%20Over%20Time%20by%20Day%20of%20the%20Week%20(Pounds).png)
+![Weight Over Time by Day of the Week (Pounds)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Weight%20Over%20Time%20by%20Day%20of%20the%20Week%20(Pounds).png)
 
-![Distribution of Measurements by Day of the Week](![Distribution of Measurements by Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Measurements%20by%20Day%20of%20the%20Week.png)
+![Distribution of Measurements by Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Distribution%20of%20Measurements%20by%20Day%20of%20the%20Week.png)
 
-![Box Plot of WeightKg](![Box Plot of WeightKg](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Box%20Plot%20of%20WeightKg.png)
+![Box Plot of WeightKg](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Box%20Plot%20of%20WeightKg.png)
 
-![Box Plot of WeightPounds](![Box Plot of WeightPounds](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Box%20Plot%20of%20WeightPounds.png)
+![Box Plot of WeightPounds](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Box%20Plot%20of%20WeightPounds.png)
 
-![Histogram of WeightKg](![Histogram of WeightKg](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20WeightKg.png)
+![Histogram of WeightKg](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20WeightKg.png)
 
-![Histogram of WeightPounds](![Histogram of WeightPounds](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20WeightPounds.png)
+![Histogram of WeightPounds](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20WeightPounds.png)
 
-![Histogram of BMI](![Histogram of BMI](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20BMI.png)
+![Histogram of BMI](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Histogram%20of%20BMI.png)
 
-![Proportion of Manual vs. Automatic Reports](![Proportion of Manual vs. Automatic Reports](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Proportion%20of%20Manual%20vs.%20Automatic%20Reports.png)
+![Proportion of Manual vs. Automatic Reports](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Proportion%20of%20Manual%20vs.%20Automatic%20Reports.png)
 
-![Correlation Heatmap](![Correlation Heatmap](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Correlation%20Heatmap.png)
+![Correlation Heatmap](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Correlation%20Heatmap.png)
 
-![WeightKg Variation by Hour of the Day](![WeightKg Variation by Hour of the Day](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/WeightKg%20Variation%20by%20Hour%20of%20the%20Day.png)
+![WeightKg Variation by Hour of the Day](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/WeightKg%20Variation%20by%20Hour%20of%20the%20Day.png)
 
-![WeightPounds Variation by Hour of the Day](![WeightPounds Variation by Hour of the Day](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/WeightPounds%20Variation%20by%20Hour%20of%20the%20Day.png)
+![WeightPounds Variation by Hour of the Day](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/WeightPounds%20Variation%20by%20Hour%20of%20the%20Day.png)
 
 WeightKg and WeightPounds variation by hour of the day are very similar. 
 
@@ -1384,13 +1384,13 @@ avg_METs_by_day %>%
   )
 
 ```
-![METs Over Time by Day of the Week](![METs Over Time by Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/METs%20Over%20Time%20by%20Day%20of%20the%20Week.png)
+![METs Over Time by Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/METs%20Over%20Time%20by%20Day%20of%20the%20Week.png)
 
-![Heatmap of METs by Hour and Day of the Week](![Heatmap of METs by Hour and Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Heatmap%20of%20METs%20by%20Hour%20and%20Day%20of%20the%20Week.png)
+![Heatmap of METs by Hour and Day of the Week](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Heatmap%20of%20METs%20by%20Hour%20and%20Day%20of%20the%20Week.png)
 
-![Scatter Plots of METs by Hour (Faceted by Day of the Week)](![Scatter Plots of METs by Hour (Faceted by Day of the Week)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Scatter%20Plots%20of%20METs%20by%20Hour%20(Faceted%20by%20Day%20of%20the%20Week).png)
+![Scatter Plots of METs by Hour (Faceted by Day of the Week)](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Scatter%20Plots%20of%20METs%20by%20Hour%20(Faceted%20by%20Day%20of%20the%20Week).png)
 
-![Interactive Calendar Heatmap of Average METs](![Interactive Calendar Heatmap of Average METs](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Interactive%20Calendar%20Heatmap%20of%20Average%20METs.png)
+![Interactive Calendar Heatmap of Average METs](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Interactive%20Calendar%20Heatmap%20of%20Average%20METs.png)
 
 
 # 7. Act
