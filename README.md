@@ -853,7 +853,7 @@ ggplot(daily_intensities_long, aes(x = Minutes, fill = Activity)) +
 
 ![Density Plot of Activity Distribution Throughout the Weekdays](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Weekdays.png)
 
-![Density Plot of Activity Distribution Throughout the Months](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Months.pngg)
+![Density Plot of Activity Distribution Throughout the Months](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Months.png)
 
 ![Density Plot of Activity Distribution Throughout the Year](https://github.com/Cailinp05/Capstone_Bellabeat_Case_Study/blob/main/Density%20Plot%20of%20Activity%20Distribution%20Throughout%20the%20Year.png)
 
