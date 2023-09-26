@@ -141,7 +141,7 @@ ggplot(total_steps) + geom_line(aes(x=Ymd, y=Steps)) +
   scale_y_continuous(labels= comma)
 
 ggplot(total_steps) + geom_line(aes(x=Ymd, y=Mean)) +
-  labs(title="Average Steps By Day for 2016") + 
+  labs(title="Average Steps By Day") + 
   scale_y_continuous(labels= comma)
 
 # total_distance and view
@@ -150,11 +150,11 @@ total_distance <- daily_activity %>% group_by(Ymd) %>%
              Mean = mean(TotalDistance, na.rm=TRUE))
 
 ggplot(total_distance) + geom_line(aes(x=Ymd, y=Distance)) +
-  labs(title="Total Distance By Date for 2016", y= "Total Distance") + 
+  labs(title="Total Distance By Date", y= "Total Distance") + 
   scale_y_continuous(labels= comma)
 
 ggplot(total_distance) + geom_line(aes(x=Ymd, y=Mean)) +
-  labs(title="Average Distance By Date for 2016", y= "Total Distance") + 
+  labs(title="Average Distance By Date", y= "Total Distance") + 
   scale_y_continuous(labels= comma)
 
 # Okay so what all can I focus on and plot to answer the questions?
